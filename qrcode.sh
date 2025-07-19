@@ -29,7 +29,7 @@ LORA_MODELS=(
 )
 
 VAE_MODELS=(
-    "https://huggingface.co/stabilityai/sd-vae-ft-mse/raw/main/diffusion_pytorch_model.safetensors"
+    "https://huggingface.co/stabilityai/sd-vae-ft-mse/resolve/main/diffusion_pytorch_model.bin"
 )
 
 ESRGAN_MODELS=(
