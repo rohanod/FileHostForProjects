@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chinese Sheet Generator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <!-- Theme CSS -->
+  <style>
+    :root {
+      /* Primary */
+      --primary: #355F99;
+      --primary-foreground: #F6F7FF;
+      --primary-container: #D5E3FF;
+      --primary-container-foreground: #26528B;
+      
+      /* Secondary */
+      --secondary: #5D5F65;
+      --secondary-foreground: #F8F8FF;
+      --secondary-container: #E1E2E9;
+      --secondary-container-foreground: #505257;
+      
+      /* Tertiary */
+      --tertiary: #5D5D78;
+      --tertiary-foreground: #FBF7FF;
+      --tertiary-container: #DBDAFB;
+      --tertiary-container-foreground: #4C4C67;
+      
+      /* Background & Surface */
+      --background: #FCF8F9;
+      --foreground: #323235;
+      --surface: #FCF8F9;
+      --on-surface: #323235;
+      --surface-variant: #E4E2E5;
+      --on-surface-variant: #5F5F61;
+      --surface-tint: #355F99;
+      
+      /* Surface containers */
+      --surface-bright: #FCF8F9;
+      --surface-dim: #DBD9DD;
+      --surface-container: #F0EDEF;
+      --surface-container-low: #F6F3F4;
+      --surface-container-high: #EAE7EA;
+      --surface-container-highest: #E4E2E5;
+      --surface-container-lowest: #FFFFFF;
+      
+      /* Error */
+      --error: #9F403D;
+      --error-foreground: #FFF7F6;
+      --destructive: #9F403D;
+      --destructive-foreground: #FFF7F6;
+      --error-container: #FE8983;
+      --error-container-foreground: #752121;
+      
+      /* Outline */
+      --outline: #7B7A7D;
+      --outline-variant: #B2B1B4;
+      --border: #B2B1B4;
+      --input: #E4E2E5;
+      --ring: #355F99;
+      
+      /* Card & Popover */
+      --card: #FFFFFF;
+      --card-foreground: #323235;
+      --popover: #FFFFFF;
+      --popover-foreground: #323235;
+      
+      /* Muted & Accent */
+      --muted: #E4E2E5;
+      --muted-foreground: #5F5F61;
+      --accent: #D5E3FF;
+      --accent-foreground: #26528B;
+      
+      /* Charts */
+      --chart-1: #355F99;
+      --chart-2: #5D5D78;
+      --chart-3: #5D5F65;
+      --chart-4: #7B7A7D;
+      --chart-5: #9F403D;
+      
+      /* Sidebar */
+      --sidebar: #F6F3F4;
+      --sidebar-foreground: #323235;
+      --sidebar-primary: #355F99;
+      --sidebar-primary-foreground: #F6F7FF;
+      --sidebar-accent: #D5E3FF;
+      --sidebar-accent-foreground: #26528B;
+      --sidebar-border: #B2B1B4;
+      --sidebar-ring: #355F99;
+      
+      /* Typography */
+      --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Noto Serif SC', 'Source Serif Pro', Georgia, serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --font-chinese: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      
+      /* Radius */
+      --radius: 0.75rem;
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-2xs: 0 1px 2px 0 rgba(50, 50, 53, 0.03);
+      --shadow-xs: 0 1px 3px 0 rgba(50, 50, 53, 0.04);
+      --shadow-sm: 0 1px 3px 0 rgba(50, 50, 53, 0.06), 0 1px 2px -1px rgba(50, 50, 53, 0.06);
+      --shadow: 0 2px 4px 0 rgba(50, 50, 53, 0.06), 0 1px 3px -1px rgba(50, 50, 53, 0.08);
+      --shadow-md: 0 4px 6px -1px rgba(50, 50, 53, 0.08), 0 2px 4px -2px rgba(50, 50, 53, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(50, 50, 53, 0.08), 0 4px 6px -4px rgba(50, 50, 53, 0.06);
+      --shadow-xl: 0 20px 25px -5px rgba(50, 50, 53, 0.1), 0 8px 10px -6px rgba(50, 50, 53, 0.08);
+      --shadow-2xl: 0 25px 50px -12px rgba(50, 50, 53, 0.2);
+      --shadow-sheet: 0 4px 24px -4px rgba(50, 50, 53, 0.12), 0 8px 16px -8px rgba(50, 50, 53, 0.08);
+      
+      /* Spacing */
+      --spacing: 0.25rem;
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      
+      /* Tracking */
+      --tracking-tight: -0.025em;
+      --tracking-normal: 0em;
+      --tracking-wide: 0.025em;
+    }
+  </style>
+  
+  <style>
+    * { box-sizing: border-box; }
+    
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      font-family: 'Inter', sans-serif !important;
+      background: var(--background) !important;
+      color: var(--foreground) !important;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface-container); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 999px; }
+    
+    input[type="text"] { outline: none !important; }
+    input[type="text"]:focus { box-shadow: 0 0 0 2px var(--ring) !important; }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background: var(--primary) !important;
+      color: var(--primary-foreground) !important;
+    }
+    
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    
+    .btn-danger {
+      background: transparent !important;
+      color: var(--error) !important;
+      border: 1px solid var(--outline-variant) !important;
+    }
+    
+    .btn-danger:hover {
+      background: var(--error) !important;
+      color: white !important;
+    }
+    
+    .icon-btn {
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.75rem;
+      background: transparent;
+      color: var(--on-surface-variant);
+      border: none;
+      cursor: pointer;
+    }
+    
+    .icon-btn:hover { background: var(--surface-container-high); }
+    
+    .word-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: var(--surface-container-lowest);
+      border-radius: 0.75rem;
+      border: 1px solid var(--outline-variant);
+      cursor: grab;
+    }
+    
+    .word-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .word-item .actions { opacity: 0; transition: opacity 0.15s; }
+    .word-item:hover .actions { opacity: 1; }
+    
+    /* SVG character display in word list */
+    .word-item .char-svg-group {
+      display: flex;
+      gap: 2px;
+    }
+    
+    /* A4 Sheet */
+    .a4-sheet {
+      background: #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      border-radius: 2px;
+      aspect-ratio: 210 / 297;
+      width: 100%;
+      max-width: 595px;
+      overflow: hidden;
+      padding: 12px;
+    }
+    
+    /* Grid cell - thin borders for ink saving */
+    .grid-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 0.5px solid #888;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    
+    .grid-cell svg { width: 100%; height: 100%; }
+    
+    /* Practice cell with light guide lines */
+    .grid-cell.practice::before,
+    .grid-cell.practice::after {
+      content: '';
+      position: absolute;
+      background: #ccc;
+    }
+    
+    .grid-cell.practice::before {
+      width: 0.5px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+    }
+    
+    .grid-cell.practice::after {
+      width: 100%;
+      height: 0.5px;
+      left: 0;
+      top: 50%;
+    }
+    
+    /* Character row */
+    .char-row {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-bottom: 2px;
+    }
+    
+    .char-info {
+      width: 36px;
+      flex-shrink: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .char-svg-display {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .char-pinyin {
+      font-size: 7px;
+      color: #666;
+      margin-top: 1px;
+    }
+    
+    .cells-container {
+      display: flex;
+      gap: 1px;
+      flex-shrink: 0;
+    }
+    
+    /* Phrase block - minimal ink */
+    .phrase-block {
+      margin-bottom: 6px;
+      padding: 3px 5px;
+      border: 0.5px solid #888;
+    }
+    
+    .phrase-block:last-child { margin-bottom: 0; }
+    
+    .phrase-block.single {
+      border: none;
+      padding: 0;
+      margin-bottom: 4px;
+    }
+    
+    .phrase-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+      padding-bottom: 2px;
+      border-bottom: 0.5px solid #ccc;
+      font-size: 9px;
+    }
+    
+    .phrase-svg-group {
+      display: flex;
+      gap: 1px;
+    }
+    
+    .phrase-svg-char {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .phrase-py { color: #555; }
+    .phrase-meaning { color: #777; margin-left: auto; font-style: italic; }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+    .animate-slide-in { animation: slideIn 0.3s ease-out forwards; }
+    .animate-scale-in { animation: scaleIn 0.3s ease-out forwards; }
+    
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.1s; }
+    
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: #fff;
+      border: 1px solid var(--outline-variant);
+      border-radius: 999px;
+      padding: 0.25rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .zoom-btn {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: transparent;
+      color: #666;
+      border: none;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .zoom-btn:hover { background: #f0f0f0; color: #000; }
+    
+    .zoom-divider { width: 1px; height: 1.25rem; background: #ddd; }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      color: #888;
+    }
+    
+    .empty-state-icon {
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+    
+    .pinyin { font-size: 0.7rem; color: var(--primary); }
+    
+    .header {
+      height: 3.5rem;
+      background: var(--surface-container-lowest);
+      border-bottom: 1px solid var(--outline-variant);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      flex-shrink: 0;
+    }
+    
+    .drag-handle { color: var(--outline-variant); cursor: grab; }
+    
+    @media print {
+      body * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .a4-sheet {
+        box-shadow: none !important;
+        max-width: none !important;
+        width: 100% !important;
+        padding: 8mm !important;
+        aspect-ratio: auto !important;
+      }
+      .phrase-block { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="flex flex-col h-screen">
+    <!-- Header -->
+    <header class="header">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center" id="logoContainer">
+          <!-- Will be filled with SVG -->
+        </div>
+        <h1 class="text-lg font-semibold" style="color: var(--foreground);">Chinese Sheet Generator</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="icon-btn" title="Settings">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+        </button>
+        <button class="btn btn-primary" onclick="window.print()">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          Print
+        </button>
+      </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Input Panel -->
+      <aside class="w-[340px] flex-shrink-0 border-r flex flex-col" style="background: var(--surface-container-low); border-color: var(--outline-variant);">
+        <div class="p-4 border-b" style="border-color: var(--outline-variant);">
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="wordInput"
+              placeholder="Enter Chinese word or phrase..." 
+              class="flex-1 px-3 py-2.5 rounded-lg text-sm"
+              style="background: var(--surface-container-high); border: 1px solid var(--outline-variant); color: var(--foreground);"
+            >
+            <button class="btn btn-primary" onclick="addWord()">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              Add
+            </button>
+          </div>
+          <p class="text-xs mt-2" style="color: var(--muted-foreground);">
+            Phrases like "你好" will be grouped together
+          </p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4">
+          <div class="space-y-2" id="wordListContainer"></div>
+          <div class="empty-state" id="emptyState" style="display: none;">
+            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 6v12m-6-6h12" stroke-linecap="round"/>
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+            </svg>
+            <p class="font-medium" style="color: var(--foreground);">Add words to get started</p>
+          </div>
+        </div>
+        
+        <div class="p-4 border-t" style="border-color: var(--outline-variant);">
+          <button class="btn btn-danger w-full" onclick="clearAll()">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            Clear All
+          </button>
+        </div>
+      </aside>
+      
+      <!-- Preview Panel -->
+      <main class="flex-1 overflow-hidden flex flex-col relative" style="background: var(--surface-container);">
+        <div class="flex-1 overflow-auto p-6 flex items-start justify-center">
+          <div class="a4-sheet animate-scale-in" id="a4Sheet">
+            <div id="sheetContent"></div>
+            <div class="empty-state py-16" id="emptySheetState" style="display: none;">
+              <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 12h6m-3-3v6" stroke-linecap="round"/>
+                <rect x="4" y="2" width="16" height="20" rx="2"/>
+              </svg>
+              <p class="text-sm">Add words to see them here</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="absolute bottom-6 right-6">
+          <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomOut()">
+              <i data-lucide="minus" class="w-4 h-4"></i>
+            </button>
+            <span class="text-xs font-medium px-2" id="zoomLevel">100%</span>
+            <button class="zoom-btn" onclick="zoomIn()">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+            </button>
+            <div class="zoom-divider"></div>
+            <button class="zoom-btn" onclick="zoomFit()">Fit</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <script>
+    lucide.createIcons();
+    
+    let words = [];
+    let currentZoom = 100;
+    const strokeCache = {};
+    
+    const pinyinMap = {
+      '你': { pinyin: 'nǐ', meaning: 'you' },
+      '好': { pinyin: 'hǎo', meaning: 'good' },
+      '你好': { pinyin: 'nǐ hǎo', meaning: 'hello' },
+      '我': { pinyin: 'wǒ', meaning: 'I, me' },
+      '是': { pinyin: 'shì', meaning: 'to be' },
+      '中': { pinyin: 'zhōng', meaning: 'middle' },
+      '国': { pinyin: 'guó', meaning: 'country' },
+      '中国': { pinyin: 'zhōng guó', meaning: 'China' },
+      '人': { pinyin: 'rén', meaning: 'person' },
+      '大': { pinyin: 'dà', meaning: 'big' },
+      '小': { pinyin: 'xiǎo', meaning: 'small' },
+      '学': { pinyin: 'xué', meaning: 'to learn' },
+      '生': { pinyin: 'shēng', meaning: 'life' },
+      '学生': { pinyin: 'xué shēng', meaning: 'student' },
+      '老': { pinyin: 'lǎo', meaning: 'old' },
+      '师': { pinyin: 'shī', meaning: 'master' },
+      '老师': { pinyin: 'lǎo shī', meaning: 'teacher' },
+      '谢': { pinyin: 'xiè', meaning: 'thank' },
+      '谢谢': { pinyin: 'xiè xie', meaning: 'thank you' },
+      '再': { pinyin: 'zài', meaning: 'again' },
+      '见': { pinyin: 'jiàn', meaning: 'see' },
+      '再见': { pinyin: 'zài jiàn', meaning: 'goodbye' }
+    };
+    
+    async function loadCharacterData(char) {
+      if (strokeCache[char]) return strokeCache[char];
+      const url = `https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest/${encodeURIComponent(char)}.json`;
+      try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`Failed to load ${char}`);
+        strokeCache[char] = await resp.json();
+        return strokeCache[char];
+      } catch (e) {
+        console.error(`Error loading character data for ${char}:`, e);
+        return null;
+      }
+    }
+    
+    // Preload characters
+    async function preloadCharacters(chars) {
+      const promises = chars.map(c => loadCharacterData(c));
+      await Promise.all(promises);
+    }
+    
+    function getScalingTransform(width, height, padding = 0) {
+      const ew = width - 2 * padding, eh = height - 2 * padding;
+      const scale = Math.min(ew / 1024, eh / 1024);
+      const xOff = padding + (ew - 1024 * scale) / 2;
+      const yOff = padding + (eh - 1024 * scale) / 2;
+      return `translate(${xOff}, ${yOff + 900 * scale}) scale(${scale}, ${-scale})`;
+    }
+    
+    // Generate full character SVG (all strokes solid)
+    function generateFullCharSVG(charData, width, height, padding = 2, color = '#000') {
+      if (!charData) return '';
+      const strokes = charData.strokes;
+      const transform = getScalingTransform(width, height, padding);
+      
+      let paths = strokes.map(s => `<path d="${s}" fill="${color}"/>`).join('');
+      
+      return `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <g transform="${transform}">${paths}</g>
+      </svg>`;
+    }
+    
+    // INK-SAVING: Light gray fill for past, outline only for current
+    function generateStrokeSVG(charData, strokeIndex, width = 22, height = 22, padding = 2) {
+      const strokes = charData.strokes;
+      const transform = getScalingTransform(width, height, padding);
+      
+      let paths = '';
+      
+      // Past strokes - very light gray fill (minimal ink)
+      for (let j = 0; j < strokeIndex; j++) {
+        paths += `<path d="${strokes[j]}" fill="#ddd" stroke="none"/>`;
+      }
+      
+      // Current stroke - outline only (no fill = saves ink)
+      paths += `<path d="${strokes[strokeIndex]}" fill="none" stroke="#000" stroke-width="15"/>`;
+      
+      return `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <g transform="${transform}">${paths}</g>
+      </svg>`;
+    }
+    
+    function getPhraseInfo(phrase) {
+      if (pinyinMap[phrase]) return pinyinMap[phrase];
+      const chars = phrase.split('');
+      const pinyinParts = [], meaningParts = [];
+      for (const char of chars) {
+        if (pinyinMap[char]) {
+          pinyinParts.push(pinyinMap[char].pinyin);
+          meaningParts.push(pinyinMap[char].meaning);
+        } else {
+          pinyinParts.push('?');
+          meaningParts.push('?');
+        }
+      }
+      return { pinyin: pinyinParts.join(' '), meaning: meaningParts.join(', ') };
+    }
+    
+    function getCharInfo(char) {
+      return pinyinMap[char] || { pinyin: '?', meaning: '?' };
+    }
+    
+    async function addWord() {
+      const input = document.getElementById('wordInput');
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const chineseOnly = text.split('').filter(c => /[\u4e00-\u9fff]/.test(c)).join('');
+      if (chineseOnly.length === 0) {
+        alert('Please enter Chinese characters');
+        return;
+      }
+      
+      if (words.find(w => w.phrase === chineseOnly)) {
+        alert('This phrase is already in the list');
+        input.value = '';
+        return;
+      }
+      
+      // Preload all character data
+      await preloadCharacters(chineseOnly.split(''));
+      
+      const info = getPhraseInfo(chineseOnly);
+      words.push({
+        id: Date.now(),
+        phrase: chineseOnly,
+        chars: chineseOnly.split(''),
+        pinyin: info.pinyin,
+        meaning: info.meaning
+      });
+      
+      input.value = '';
+      await renderWordList();
+      await renderSheet();
+    }
+    
+    async function removeWord(id) {
+      words = words.filter(w => w.id !== id);
+      await renderWordList();
+      await renderSheet();
+    }
+    
+    async function clearAll() {
+      if (words.length === 0) return;
+      if (confirm('Clear all words?')) {
+        words = [];
+        await renderWordList();
+        await renderSheet();
+      }
+    }
+    
+    async function renderWordList() {
+      const container = document.getElementById('wordListContainer');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (words.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'flex';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      let html = '';
+      for (let index = 0; index < words.length; index++) {
+        const word = words[index];
+        
+        // Generate SVGs for each character in the phrase
+        let charSvgs = '';
+        for (const char of word.chars) {
+          const charData = strokeCache[char];
+          charSvgs += generateFullCharSVG(charData, 28, 28, 2, 'var(--foreground)');
+        }
+        
+        html += `
+          <div class="word-item animate-slide-in delay-${index % 2 + 1}" data-id="${word.id}">
+            <div class="drag-handle">
+              <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="char-svg-group">${charSvgs}</div>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="pinyin">${word.pinyin}</span>
+                <span style="color: var(--outline-variant);">•</span>
+                <span class="text-xs truncate" style="color: var(--muted-foreground);">${word.meaning}</span>
+              </div>
+            </div>
+            <div class="actions flex items-center gap-1">
+              <button class="icon-btn" onclick="editWord(${word.id})" title="Edit">
+                <i data-lucide="pencil" class="w-4 h-4"></i>
+              </button>
+              <button class="icon-btn" onclick="removeWord(${word.id})" title="Delete" style="color: var(--error);">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+      lucide.createIcons();
+    }
+    
+    function calculateCellsPerRow() {
+      const sheetWidth = 595 - 24;
+      const charInfoWidth = 36 + 3;
+      const cellWidth = 26 + 1;
+      return Math.floor((sheetWidth - charInfoWidth) / cellWidth);
+    }
+    
+    async function renderSheet() {
+      const content = document.getElementById('sheetContent');
+      const emptyState = document.getElementById('emptySheetState');
+      
+      if (words.length === 0) {
+        content.innerHTML = '';
+        emptyState.style.display = 'flex';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      const maxCellsPerRow = calculateCellsPerRow();
+      let html = '';
+      
+      for (const word of words) {
+        let charRowsHtml = '';
+        
+        for (let i = 0; i < word.chars.length; i++) {
+          const char = word.chars[i];
+          const charInfo = getCharInfo(char);
+          const charData = strokeCache[char];
+          
+          // Generate full character SVG for the label
+          const charDisplaySvg = generateFullCharSVG(charData, 24, 24, 2, '#000');
+          
+          let cellsHtml = '';
+          
+          if (charData) {
+            const strokeCount = charData.strokes.length;
+            
+            // Stroke frames
+            for (let j = 0; j < Math.min(strokeCount, maxCellsPerRow); j++) {
+              cellsHtml += `<div class="grid-cell">${generateStrokeSVG(charData, j, 22, 22, 2)}</div>`;
+            }
+            
+            // Fill remaining with practice cells
+            const remaining = maxCellsPerRow - strokeCount;
+            if (remaining > 0) {
+              for (let j = 0; j < remaining; j++) {
+                cellsHtml += `<div class="grid-cell practice"></div>`;
+              }
+            }
+          } else {
+            for (let j = 0; j < maxCellsPerRow; j++) {
+              cellsHtml += `<div class="grid-cell practice"></div>`;
+            }
+          }
+          
+          charRowsHtml += `
+            <div class="char-row">
+              <div class="char-info">
+                <div class="char-svg-display">${charDisplaySvg}</div>
+                <div class="char-pinyin">${charInfo.pinyin}</div>
+              </div>
+              <div class="cells-container">${cellsHtml}</div>
+            </div>
+          `;
+        }
+        
+        const isSingle = word.chars.length === 1;
+        
+        // Generate phrase SVGs for multi-char phrases
+        let phraseSvgs = '';
+        if (!isSingle) {
+          for (const char of word.chars) {
+            const charData = strokeCache[char];
+            phraseSvgs += `<span class="phrase-svg-char">${generateFullCharSVG(charData, 14, 14, 1, '#000')}</span>`;
+          }
+        }
+        
+        html += `
+          <div class="phrase-block ${isSingle ? 'single' : ''} animate-fade-in-up">
+            ${!isSingle ? `
+              <div class="phrase-label">
+                <span class="phrase-svg-group">${phraseSvgs}</span>
+                <span class="phrase-py">${word.pinyin}</span>
+                <span class="phrase-meaning">${word.meaning}</span>
+              </div>
+            ` : ''}
+            ${charRowsHtml}
+          </div>
+        `;
+      }
+      
+      content.innerHTML = html;
+    }
+    
+    function editWord(id) {
+      const word = words.find(w => w.id === id);
+      if (word) {
+        const newPinyin = prompt('Edit pinyin:', word.pinyin);
+        if (newPinyin !== null) {
+          word.pinyin = newPinyin;
+          const newMeaning = prompt('Edit meaning:', word.meaning);
+          if (newMeaning !== null) {
+            word.meaning = newMeaning;
+          }
+          renderWordList();
+          renderSheet();
+        }
+      }
+    }
+    
+    function zoomIn() {
+      if (currentZoom < 200) { currentZoom += 25; applyZoom(); }
+    }
+    
+    function zoomOut() {
+      if (currentZoom > 50) { currentZoom -= 25; applyZoom(); }
+    }
+    
+    function zoomFit() {
+      currentZoom = 100;
+      applyZoom();
+    }
+    
+    function applyZoom() {
+      const sheet = document.getElementById('a4Sheet');
+      sheet.style.transform = `scale(${currentZoom / 100})`;
+      sheet.style.transformOrigin = 'top center';
+      document.getElementById('zoomLevel').textContent = `${currentZoom}%`;
+    }
+    
+    document.getElementById('wordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') addWord();
+    });
+    
+    // Render logo with SVG
+    async function renderLogo() {
+      await loadCharacterData('中');
+      const charData = strokeCache['中'];
+      if (charData) {
+        document.getElementById('logoContainer').innerHTML = generateFullCharSVG(charData, 20, 20, 1, '#fff');
+      }
+    }
+    
+    async function init() {
+      await renderLogo();
+      
+      const demoPhrase = '你好';
+      await preloadCharacters(demoPhrase.split(''));
+      
+      const info = getPhraseInfo(demoPhrase);
+      words.push({
+        id: Date.now(),
+        phrase: demoPhrase,
+        chars: demoPhrase.split(''),
+        pinyin: info.pinyin,
+        meaning: info.meaning
+      });
+      
+      await renderWordList();
+      await renderSheet();
+    }
+    
+    init();
+  </script>
+</body>
+</html>
